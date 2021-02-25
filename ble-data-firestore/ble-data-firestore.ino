@@ -73,7 +73,7 @@ void loop() {
       Serial.printf("Band 2 detected!");
       isband2 = 1;
       }
-    Serial.printf("%s:",addd.toString().c_str());
+    Serial.printf("%s: and manufacture data = %s :",addd.toString().c_str(), device.getManufacturerData().toString());
     Serial.println(rssi);
   }
     if(isband1 == 0){
@@ -99,7 +99,7 @@ void loop() {
       }
      
     Serial.println("Info = " + info);
-    json.set("/Receiver 2", info);
+    json.set("/Receiver 1", info);
     digitalWrite(PIN, HIGH);
     Firebase.updateNode(firebaseData,"/Nearby BLEs",json);
     digitalWrite(PIN, LOW); 
