@@ -1,6 +1,6 @@
 #include <driver/adc.h>
 #include <FirebaseESP32.h>
-
+const int BatteryPin = 36;
 const char* ssid = "SO]-[AM";
 const char* password =  "Mnis081!";
 
@@ -16,26 +16,36 @@ float battery_read()
     long sum = 0;                  // sum of samples taken
     float voltage = 0.0;           // calculated voltage
     float output = 0.0;            //output value
-    const float battery_max = 3.6; //maximum voltage of battery
-    const float battery_min = 3.0; //minimum voltage of battery before shutdown
+    const float battery_max = 4.5; //maximum voltage of battery
+    const float battery_min = 3.3; //minimum voltage of battery before shutdown
 
-    float R1 = 100000.0; // resistance of R1 (100K)
-    float R2 = 10000.0;  // resistance of R2 (10K)
+//    float R1 = 100000.0; // resistance of R1 (100K)
+//    float R2 = 10000.0;  // resistance of R2 (10K)
+
+    float R1 = 0.0; // resistance of R1 (100K)
+    float R2 = 0.0;  // resistance of R2 (10K)
 
     for (int i = 0; i < 500; i++)
     {
-        sum += adc1_get_voltage(ADC1_CHANNEL_0);
+        sum += analogRead(BatteryPin);
         delayMicroseconds(1000);
     }
     // calculate the voltage
     voltage = sum / (float)500;
-    voltage = (voltage * 1.1) / 4096.0; //for internal 1.1v reference
+    voltage = voltage / 930.68;
+//    voltage = (voltage * 1.1) / 4096.0; //for internal 1.1v reference
     // use if added divider circuit
     // voltage = voltage / (R2/(R1+R2));
     //round value by two precision
-    voltage = roundf(voltage * 100) / 100;
+//    voltage = roundf(voltage * 100) / 100;
     Serial.print("voltage: ");
     Serial.println(voltage, 2);
+
+    digitalWrite(2, HIGH);
+    json.set("/Voltage", voltage); //For Band 1
+    Firebase.updateNode(firebaseData,"/Battery",json);
+    digitalWrite(2, LOW);
+    
     output = ((voltage - battery_min) / (battery_max - battery_min)) * 100;
     if (output < 100)
         return output;

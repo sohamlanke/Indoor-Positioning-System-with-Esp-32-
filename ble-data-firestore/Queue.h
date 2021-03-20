@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#define size 10
+#define size 7
 
 int getcount(int arr[]){
     int count = 0;

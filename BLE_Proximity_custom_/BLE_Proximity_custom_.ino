@@ -5,7 +5,7 @@
 #include "time.h"
 
 const int PIN = 2;
-const int CUTOFF = -72;
+const int CUTOFF = -60;
 BLEAdvertising *pAdvertising;
 
 const char* ssid = "SO]-[AM";
@@ -35,7 +35,7 @@ void printLocalTime()
 
 void setup() {
   pinMode(PIN, OUTPUT);
-  BLEDevice::init("Band 1");
+  BLEDevice::init("Band 2");
   Serial.begin(115200);
   pAdvertising = BLEDevice::getAdvertising();
   pAdvertising->start();
@@ -96,8 +96,8 @@ void loop() {
       char timeStringBuff[50]; 
       strftime(timeStringBuff, sizeof(timeStringBuff), "%A, %B %d %Y %H:%M:%S", &timeinfo);
       String asString(timeStringBuff);
-//      json.set("/bandid", "84:cc:a8:5e:a5:aa");  //For Band 2
-      json.set("/bandid", "84:cc:a8:5f:87:5a"); //For Band 1
+      json.set("/bandid", "84:cc:a8:5e:a5:aa");  //For Band 2
+//      json.set("/bandid", "84:cc:a8:5f:87:5a"); //For Band 1
       Firebase.updateNode(firebaseData,"/Alert/socialDistancing/"+asString,json);
       }   
     }

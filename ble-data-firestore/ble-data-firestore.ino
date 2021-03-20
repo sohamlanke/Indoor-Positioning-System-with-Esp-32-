@@ -48,7 +48,20 @@ int *band2 = myobj2();
 
 void loop() {
 
-  String info = "";
+  if(WiFi.status() != WL_CONNECTED){
+    digitalWrite(PIN, HIGH);
+    WiFi.begin("SO]-[AM", "Mnis081!");
+  
+    while (WiFi.status() != WL_CONNECTED) {
+      delay(500);
+      Serial.println("Connecting to WiFi..");
+    }
+ 
+  Serial.println("Connected to the WiFi network");
+  digitalWrite(PIN, LOW);
+  }
+  else{
+    String info = "";
     
   BLEScan *scan = BLEDevice::getScan();
   scan->setActiveScan(true);
@@ -73,7 +86,7 @@ void loop() {
       Serial.printf("Band 2 detected!");
       isband2 = 1;
       }
-    Serial.printf("%s: and manufacture data = %s :",addd.toString().c_str(), device.getManufacturerData().toString());
+    Serial.printf("%s: and manufacture data = %s :",addd.toString().c_str(), device.getManufacturerData());
     Serial.println(rssi);
   }
     if(isband1 == 0){
@@ -102,5 +115,6 @@ void loop() {
     json.set("/Receiver 1", info);
     digitalWrite(PIN, HIGH);
     Firebase.updateNode(firebaseData,"/Nearby BLEs",json);
-    digitalWrite(PIN, LOW); 
+    digitalWrite(PIN, LOW);
+    } 
 }
