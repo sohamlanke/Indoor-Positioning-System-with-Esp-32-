@@ -32,7 +32,7 @@ void printLocalTime()
   }
   Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
 }
-void isTouch(){
+bool isTouch(){
   const int buttonPin = 15;  // Data pin for touch sensor
   int TouchState = 0;
   TouchState = digitalRead(buttonPin);
@@ -97,7 +97,7 @@ void loop() {
   }
   Serial.println(target_rssi);
   Serial.println("-----------------------------");
-  String 
+//  String 
 //  digitalWrite(PIN, target_rssi < CUTOFF ? LOW : HIGH);
   if(target_rssi > CUTOFF && detect_flag == 0){
     detect_flag = 1;
